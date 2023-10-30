@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from "react";
 import CreateEvent from "./components/event/create";
-import axios from "axios";
 import Events from "./components/event/events";
+import callApi from "@/services/GetData";
 
 export default function Home() {
   const [events, setEvents] = useState(null)
@@ -10,7 +10,7 @@ export default function Home() {
 
   const getEvents = () => {
     try {
-      axios.get('/api/events')
+      callApi('/api/events',{},'get',false)
         // .then((res) => res.json())
         .then((result) => {
           setEvents(result?.data?.data);
@@ -29,7 +29,7 @@ export default function Home() {
   }, [])
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <CreateEvent />
+      <CreateEvent onCreateEvent={getEvents}/>
       {isLoading ? <>Loading</> :
         <Events events={events} />
       }

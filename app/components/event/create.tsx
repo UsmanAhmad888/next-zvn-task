@@ -1,9 +1,10 @@
-import axios from 'axios';
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form";
 import { Button } from "@nextui-org/react";
+import callApi from '@/services/GetData';
+import Error from '../common/error';
 
-const CreateEvent = (props: any) => {
+const CreateEvent = ({ onCreateEvent }: { onCreateEvent: () => void }) => {
 
     const [error, setError] = useState(null)
     const {
@@ -15,8 +16,9 @@ const CreateEvent = (props: any) => {
     const onSubmit = async (event: any) => {
         event.date = new Date(event.date)
         try {
-            let res = await axios.post('/api/events', event);
+            let res = await callApi('/api/events', event, 'post', true);
             if (res) {
+                onCreateEvent();
                 reset({ title: '', date: null });
             }
         } catch (error: any) {
@@ -25,10 +27,6 @@ const CreateEvent = (props: any) => {
     };
     return (
         <div className="z-10  w-full items-center font-mono text-sm">
-            {/* show server error */}
-            {error && <div className="rounded  border border-red-600 bg-red-50 p-1 text-red-600">
-                {error}
-            </div>}
             <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
                 Create Event
             </p>
@@ -47,7 +45,7 @@ const CreateEvent = (props: any) => {
                             minLength: { value: 3, message: 'atleaste 3 charactors required' }
                         })}
                     />
-                    {errors.title ? <>{errors?.title?.message}</> : <></>}
+                    {errors.title ? <Error message={errors?.title?.message} /> : <></>}
 
                     <label htmlFor="card-expiry">Date</label>
                     <input
@@ -56,7 +54,7 @@ const CreateEvent = (props: any) => {
                         {...register('date')}
                     />
                     <Button color="primary" type='submit'>
-                        Button
+                        Create Event
                     </Button>
                     {/* <input role="button" type='submit' className="mt-5 rounded bg-green-500 p-2 text-neutral-50" /> */}
 
