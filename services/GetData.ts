@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { ZodError } from 'zod';
 
-const notify = (message?, action?) => toast[action || 'success'](message || "Success Notification !", {
+const notify = (message?:string, action?:'success' | 'error') => toast[action || 'success'](message || "Success Notification !", {
     position: toast.POSITION.TOP_RIGHT
 });
 
